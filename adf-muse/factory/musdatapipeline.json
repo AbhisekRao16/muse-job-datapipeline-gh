@@ -1,0 +1,15 @@
+{
+	"name": "musdatapipeline",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "800dad26-5552-4896-82e0-06eef4a005de",
+		"tenantId": "a9f10e4c-e0fe-4c65-a1bd-ec1e2abdddc2"
+	}
+}
