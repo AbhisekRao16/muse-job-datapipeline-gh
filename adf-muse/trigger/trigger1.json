@@ -2,7 +2,7 @@
 	"name": "trigger1",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
@@ -14,9 +14,9 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Day",
-				"interval": 1,
-				"startTime": "2026-06-22T18:33:00",
+				"frequency": "Minute",
+				"interval": 20,
+				"startTime": "2026-06-22T18:38:00",
 				"timeZone": "India Standard Time"
 			}
 		}
