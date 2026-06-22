@@ -1,0 +1,461 @@
+{
+  "datasets": [
+    {
+      "name": "job_market_metrics",
+      "displayName": "Job Market Metrics",
+      "config": {
+        "source": "muse.gold.job_muse_gold_main",
+        "measures": [
+          {
+            "displayName": "Total Jobs",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              }
+            },
+            "name": "total_jobs",
+            "expr": "COUNT(*)",
+            "comment": "Total number of job postings"
+          },
+          {
+            "displayName": "Unique Companies",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              }
+            },
+            "name": "unique_companies",
+            "expr": "COUNT(DISTINCT company_id)",
+            "comment": "Number of unique companies hiring"
+          }
+        ],
+        "version": "1.1",
+        "comment": "Centralized metrics for job market analysis from the gold layer",
+        "dimensions": [
+          {
+            "name": "company_name",
+            "expr": "company_name",
+            "displayName": "Company Name",
+            "comment": "Name of the hiring company"
+          },
+          {
+            "name": "exp_level",
+            "expr": "exp_level",
+            "displayName": "Experience Level",
+            "comment": "Required experience level for the job"
+          },
+          {
+            "name": "mode_of_work",
+            "expr": "mode_of_work",
+            "displayName": "Work Mode",
+            "comment": "Remote, hybrid, or on-site work mode"
+          },
+          {
+            "name": "location_city",
+            "expr": "`location-city`",
+            "displayName": "City",
+            "comment": "Job location city"
+          },
+          {
+            "name": "location_state",
+            "expr": "`location-state`",
+            "displayName": "State",
+            "comment": "Job location state"
+          },
+          {
+            "name": "job_type",
+            "expr": "type",
+            "displayName": "Job Type",
+            "comment": "Type of employment"
+          },
+          {
+            "name": "publication_month",
+            "expr": "DATE_TRUNC('MONTH', publication_date)",
+            "displayName": "Publication Month",
+            "comment": "Month when the job was published"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "ae816039",
+      "displayName": "Untitled page",
+      "layout": [
+        {
+          "widget": {
+            "name": "total_jobs_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "job_market_metrics",
+                  "fields": [
+                    {
+                      "name": "measure(total_jobs)",
+                      "expression": "MEASURE(`total_jobs`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Total Job Postings",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_jobs)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "unique_companies_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "job_market_metrics",
+                  "fields": [
+                    {
+                      "name": "measure(unique_companies)",
+                      "expression": "MEASURE(`unique_companies`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Unique Companies Hiring",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(unique_companies)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "jobs_by_exp_level",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "job_market_metrics",
+                  "fields": [
+                    {
+                      "name": "exp_level",
+                      "expression": "`exp_level`"
+                    },
+                    {
+                      "name": "measure(total_jobs)",
+                      "expression": "MEASURE(`total_jobs`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Jobs by Experience Level",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "exp_level",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_jobs)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "top_hiring_companies",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "job_market_metrics",
+                  "fields": [
+                    {
+                      "name": "measure(total_jobs)",
+                      "expression": "MEASURE(`total_jobs`)"
+                    },
+                    {
+                      "name": "company_name",
+                      "expression": "`company_name`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Top 10 Hiring Companies",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "measure(total_jobs)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "company_name",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 6,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "jobs_by_state",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "job_market_metrics",
+                  "fields": [
+                    {
+                      "name": "measure(total_jobs)",
+                      "expression": "MEASURE(`total_jobs`)"
+                    },
+                    {
+                      "name": "location_state",
+                      "expression": "`location_state`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Top States by Job Count",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "measure(total_jobs)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "location_state",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "jobs_by_work_mode",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "job_market_metrics",
+                  "fields": [
+                    {
+                      "name": "measure(total_jobs)",
+                      "expression": "MEASURE(`total_jobs`)"
+                    },
+                    {
+                      "name": "mode_of_work",
+                      "expression": "`mode_of_work`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Jobs by Work Mode",
+                "showTitle": true
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "measure(total_jobs)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "mode_of_work",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "jobs_over_time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "job_market_metrics",
+                  "fields": [
+                    {
+                      "name": "publication_month",
+                      "expression": "`publication_month`"
+                    },
+                    {
+                      "name": "measure(total_jobs)",
+                      "expression": "MEASURE(`total_jobs`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Job Posting Trend",
+                "showTitle": true,
+                "showDescription": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "publication_month",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_jobs)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
